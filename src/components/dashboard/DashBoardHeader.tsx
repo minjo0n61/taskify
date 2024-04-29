@@ -197,7 +197,7 @@ function DashBoardHeader({ myPage }: HeaderProps) {
   const { data: memberList } = useMemberListQuery(dashboardId);
   const myEmail = myProfile?.email;
   const filteredMemberList = memberList?.members?.filter(
-    (member: string) => member.email !== myEmail,
+    (member: string | any) => member.email !== myEmail,
   );
 
   const handleEdit = () => {

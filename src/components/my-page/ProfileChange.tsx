@@ -1,19 +1,16 @@
 import { useEffect, useState } from 'react';
-import { UseMutationResult } from '@tanstack/react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { ImgFileUpload, imgUrlState } from '@/components/common/ImgFileUpload';
+import { ImgFileUpload } from '@/components/common/ImgFileUpload';
 import FormInput from '@/components/common/form/Form';
 import {
   profileImageUrlState,
   useMyProfileQuery,
 } from '@/hooks/query/users/useMyProfileQuery';
 import useProfileEditMutation from '@/hooks/query/users/useMyprofileEditMutation';
-import {
-  resultServerImgState,
-  useProfileImgUploadMutation,
-} from '@/hooks/query/users/useProfileImgUploadMutation';
+import { resultServerImgState } from '@/hooks/query/users/useProfileImgUploadMutation';
 import MEDIA_QUERIES from '@/constants/MEDIAQUERIES';
+import { FormValues } from '@/types/Form';
 
 const S = {
   Container: styled.div`
@@ -90,8 +87,10 @@ function ProfileChange() {
   setProfileImageUrl(myProfile && myProfile.profileImageUrl);
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  const editMyProfile = (data: never, imgServerUrl: string) => {
-    editProfile(data, (imgServerUrl as never) || (profileImageUrl as never));
+  const editMyProfile = (data: FormValues, imgServerUrl: string) => {
+    if ('email' in data && 'name' in data) {
+      editProfile(data, (imgServerUrl as never) || (profileImageUrl as never));
+    }
   };
 
   useEffect(() => {

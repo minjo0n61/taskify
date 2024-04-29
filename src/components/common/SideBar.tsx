@@ -178,7 +178,7 @@ const S = {
 };
 
 interface Dashboard {
-  id: string;
+  id: any;
   color: string;
   createdByMe: boolean;
   title: string;
@@ -204,7 +204,7 @@ function Sidebar() {
   });
   const dashboards = data?.data?.dashboards;
 
-  const totalPages = Math.ceil(data?.totalCount / 8);
+  const totalPages = Math.ceil((data?.data?.totalCount ?? 0) / 8);
 
   const handlePrevBtnClick = () => {
     setPage((prev) => prev - 1);
@@ -241,22 +241,26 @@ function Sidebar() {
         <S.AddDashBoardIcon onClick={openModal6} />
       </S.AddDashBoard>
       <ul>
-        {dashboards?.map((dashboard: Dashboard) => (
-          <S.DashboardItemWrapper
-            key={dashboard.id}
-            onClick={() => handleDashboardClick(dashboard.id)}
-            isActive={dashboard.id === selectedDashboardId}
-          >
-            <S.CircleColor>
-              <CircleColor color={dashboard.color} />
-            </S.CircleColor>
-            <S.DashboardItem
-              $active={dashboard.id === router.query.dashboardId}
+        {dashboards?.map((dashboard: Dashboard) => {
+          return (
+            <S.DashboardItemWrapper
+              key={dashboard.id}
+              onClick={() => handleDashboardClick(dashboard.id)}
+              isActive={
+                dashboard.id === selectedDashboardId ||
+                dashboard.id === Number(router.query.id)
+              }
             >
-              {dashboard.createdByMe && <CreateByMe />} &nbsp; {dashboard.title}
-            </S.DashboardItem>
-          </S.DashboardItemWrapper>
-        ))}
+              <S.CircleColor>
+                <CircleColor color={dashboard.color} />
+              </S.CircleColor>
+              <S.DashboardItem $active={dashboard.id === selectedDashboardId}>
+                {dashboard.createdByMe && <CreateByMe />} &nbsp;{' '}
+                {dashboard.title}
+              </S.DashboardItem>
+            </S.DashboardItemWrapper>
+          );
+        })}
         <NewDashBoardModal
           isOpen={isModalOpen6}
           onClose={closeModal6}

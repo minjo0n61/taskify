@@ -54,7 +54,7 @@ function DashBoardSkeleton() {
     <>
       <GridTemplate>
         {Array.from({ length: 6 }).map((_, index) => (
-          <S.Container>
+          <S.Container key={index}>
             <S.BoardTitle>
               <div className="circle">
                 <Shimmer />

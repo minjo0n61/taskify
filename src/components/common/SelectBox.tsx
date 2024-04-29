@@ -98,7 +98,7 @@ const S = {
 
 interface Option {
   id: number;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 interface SelectBoxProps {
   options: Option[];
@@ -115,13 +115,15 @@ function SelectBox({
   displayFieldName,
   initialValue,
 }: SelectBoxProps): JSX.Element {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState<any>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [filterText, setFilterText] = useState('');
   const optionAreaRef = useRef<HTMLUListElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function handleSelectOption(option: never): void {
+  console.log(options);
+
+  function handleSelectOption(option: any): void {
     setSelectedOption(option);
     setFilterText('');
     setIsFocused(false);
@@ -153,6 +155,7 @@ function SelectBox({
         ref={inputRef}
         type="text"
         value={
+          // eslint-disable-next-line no-nested-ternary
           selectedOption
             ? selectedOption[displayFieldName]
             : !isFocused && initialValue

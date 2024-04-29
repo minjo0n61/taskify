@@ -90,6 +90,12 @@ const S = {
     }
   `,
 
+  TagList: styled.div`
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  `,
+
   ButtonContainer: styled.div`
     display: flex;
     justify-content: flex-end;
@@ -242,7 +248,7 @@ function ToDoCreateModal({ isOpen, onClose, dashboardId, columnId }: any) {
           />
         </S.FieldBox>
 
-        <div style={{ display: 'flex', gap: '0.8rem' }}>
+        <S.TagList>
           {toDoInfo.tags.map((tag, index) => (
             <S.Tag key={index} index={index}>
               {tag}
@@ -254,7 +260,7 @@ function ToDoCreateModal({ isOpen, onClose, dashboardId, columnId }: any) {
               </button>
             </S.Tag>
           ))}
-        </div>
+        </S.TagList>
 
         <S.FieldBox>
           <S.Label>이미지</S.Label>

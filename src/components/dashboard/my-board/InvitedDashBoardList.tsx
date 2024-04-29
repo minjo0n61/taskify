@@ -160,14 +160,14 @@ function InvitedDashBoardList() {
   }, [searchParams]);
   const { mutate: responseInvitationMutate } = useAcceptInvitationMutation();
 
-  const handleAcceptButtonClick = (invitationId: string) => {
+  const handleAcceptButtonClick = (invitationId: number) => {
     responseInvitationMutate({
       invitationId: invitationId,
       inviteAccepted: true,
     });
   };
 
-  const handleRejectButtonClick = (invitationId: string) => {
+  const handleRejectButtonClick = (invitationId: number) => {
     const confirmReject = window.confirm('정말 초대를 거절하시겠어요?🥹'); // 나중에 모달 대체로
     if (confirmReject) {
       responseInvitationMutate({
@@ -188,11 +188,12 @@ function InvitedDashBoardList() {
     : invitationData?.pages.flatMap((page) => page.invitations);
 
   const hasSearchResult = filteredInvitations?.length !== 0;
+  const isEmptyInvitation = invitationData?.pages[0]?.invitations.length === 0;
 
   return (
     <S.Container>
       <S.Title>초대받은 대시보드</S.Title>
-      {!invitationData?.pages ? (
+      {isEmptyInvitation ? (
         <NoInvitation />
       ) : (
         <>
@@ -211,7 +212,7 @@ function InvitedDashBoardList() {
             <>
               {!hasSearchResult && (
                 <S.NoResult>
-                  <span>{keyword}</span>로 검색한 결과가 없습니다😢
+                  '<span>{keyword}</span>'로 검색한 결과가 없습니다😢
                 </S.NoResult>
               )}
               {filteredInvitations?.map((invitation) => (

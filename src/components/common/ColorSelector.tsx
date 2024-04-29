@@ -1,6 +1,8 @@
-import React, { useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from 'react';
 import { atom, useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import useDetailDashboardQuery from '@/hooks/query/dashboards/useDetailDashboardQuery';
 import ColorCheckIcon from '@/public/icon/colorCheckIcon.svg';
 import theme from '@/styles/theme';
 
@@ -68,6 +70,8 @@ function ColorSelector(): JSX.Element {
   const [showIcon, setShowIcon] = useState<boolean>(false);
   const [currentColor, setCurrentColor] = useState<string>('');
   const [resultColor, setResultColor] = useRecoilState(resultColorState);
+  const router = useRouter();
+  const { data: dashDetail } = useDetailDashboardQuery(Number(router.query.id));
 
   const handleColorClick = (color: Color) => {
     lastClickedColor.current = color;
@@ -75,6 +79,12 @@ function ColorSelector(): JSX.Element {
     setCurrentColor(color);
     setResultColor(color);
   };
+
+  useEffect(() => {
+    if (router.asPath.includes('/edit') && dashDetail?.color) {
+      handleColorClick(dashDetail?.color);
+    }
+  }, [dashDetail, router.asPath]);
 
   return (
     <S.ColorArea>

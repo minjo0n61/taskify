@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DashBoardSkeleton from './DashBoardSkeleton';
 import { styled } from 'styled-components';
 import CircleColor from '@/components/common/CircleColor';
@@ -98,7 +98,9 @@ function DashBoardList() {
   });
 
   const dashboards = data?.data?.dashboards;
-  const totalPages = Math.ceil(data?.data?.totalCount / 5);
+  const totalPages = useMemo(() => {
+    return Math.ceil(data?.data?.totalCount / 5) || 0;
+  }, [data]);
 
   const handlePrevBtnClick = () => {
     setPage((prev) => prev - 1);

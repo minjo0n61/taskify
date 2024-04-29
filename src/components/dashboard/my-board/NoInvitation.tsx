@@ -24,7 +24,7 @@ function NoInvitation() {
   return (
     <S.Container>
       <MessageIcon />
-      아직 초대받은 대시보드가 없어요✨
+      초대받은 대시보드가 없어요✨
     </S.Container>
   );
 }

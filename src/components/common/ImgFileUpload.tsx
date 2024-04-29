@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef } from 'react';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
@@ -111,7 +112,7 @@ interface ImgFileUploadProps {
   edit: boolean;
   small: boolean;
   onImageUpload?: (url: string) => void;
-  columnId?: string;
+  columnId?: string | number;
   initialImageUrl?: string;
 }
 
@@ -130,8 +131,9 @@ function ImgFileUpload({
   // 내 프로필 사진 (서버한테 받은)url <마이페이지에서만 사용>
   const profileImageUrl = useRecoilValue(profileImageUrlState);
 
-  const { mutate: cardImgMutate, data: cardImg } =
-    useCardImgUploadMutation(columnId);
+  const { mutate: cardImgMutate, data: cardImg } = useCardImgUploadMutation(
+    columnId as number,
+  );
   const { mutate: profileImg } = useProfileImgUploadMutation();
   const cardImgUrl = cardImg?.imageUrl;
 

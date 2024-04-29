@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import DateSelector from '@/components/common/DateSelector';
 import { ImgFileUpload } from '@/components/common/ImgFileUpload';
@@ -92,6 +92,12 @@ const S = {
     }
   `,
 
+  TagList: styled.div`
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  `,
+
   ButtonContainer: styled.div`
     display: flex;
     justify-content: flex-end;
@@ -123,6 +129,18 @@ function ToDoEditModal({ isOpen, onClose, cardId, dashboardId }: any) {
   });
 
   const dashId = Number(dashboardId);
+
+  useEffect(() => {
+    setToDoInfo({
+      columnId: cardDetailData?.columnId,
+      assigneeUserId: cardDetailData?.assignee.id,
+      title: cardDetailData?.title,
+      description: cardDetailData?.description,
+      dueDate: cardDetailData?.dueDate,
+      tags: cardDetailData?.tags,
+      imageUrl: cardDetailData?.imageUrl,
+    });
+  }, [cardDetailData]);
 
   const { data: membersData } = useMemberListQuery(dashboardId);
   const assigneeOptions = membersData?.members;
@@ -255,7 +273,7 @@ function ToDoEditModal({ isOpen, onClose, cardId, dashboardId }: any) {
             onKeyPress={handleTagInput}
           />
         </S.FieldBox>
-        <div style={{ display: 'flex', gap: '0.8rem' }}>
+        <S.TagList>
           {toDoInfo?.tags?.map((tag, index) => (
             <S.Tag key={index} index={index}>
               {tag}
@@ -267,7 +285,7 @@ function ToDoEditModal({ isOpen, onClose, cardId, dashboardId }: any) {
               </button>
             </S.Tag>
           ))}
-        </div>
+        </S.TagList>
 
         <S.FieldBox>
           <S.Label>이미지</S.Label>

@@ -3,6 +3,7 @@ import FormInput from '@/components/common/form/Form';
 import WarningModal from '@/components/common/modal/WarningModal';
 import usePasswordChangeMutation from '@/hooks/query/auth/usePasswordChangeMutation';
 import MEDIA_QUERIES from '@/constants/MEDIAQUERIES';
+import { FormValues } from '@/types/Form';
 
 const S = {
   Layout: styled.div`
@@ -40,8 +41,8 @@ function PasswordChange() {
     setOpen,
     modalMessage,
   } = usePasswordChangeMutation();
-  const editMyPassword = (data: never) => {
-    passwordChange(data);
+  const editMyPassword = (data: FormValues) => {
+    if ('nowPassword' in data && 'newPassword' in data) passwordChange(data);
   };
 
   return (
