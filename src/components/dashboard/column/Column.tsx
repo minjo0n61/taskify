@@ -18,7 +18,7 @@ const S = {
       display: block;
     }
   `,
-  Column: styled.div`
+  Column: styled.div<ColumnProps>`
     height: calc(100vh - 7rem);
     min-width: 35.4rem;
 
@@ -37,6 +37,7 @@ const S = {
       width: 100%;
       height: 6rem;
       height: ${({ isExpanded, cardCount }) =>
+        /* eslint-disable-next-line */
         isExpanded && cardCount === 0
           ? '12.5rem'
           : isExpanded
@@ -50,7 +51,9 @@ const S = {
     ${MEDIA_QUERIES.onMobile} {
       width: 100%;
       height: 6rem;
+
       height: ${({ isExpanded, cardCount }) =>
+        /* eslint-disable-next-line */
         isExpanded && cardCount === 0
           ? '12.5rem'
           : isExpanded
@@ -152,83 +155,92 @@ const S = {
   `,
 };
 
-const Column = React.forwardRef(({ title, id, dashboardId }, ref) => {
-  const loaderRef = useRef();
-  const [isModalOpen1, setModalOpen1] = useState(false);
-  const [isModalOpen2, setModalOpen2] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [tempColumnName, setTempColumnName] = useState(title);
+const Column = React.forwardRef(
+  (
+    {
+      title,
+      id,
+      dashboardId,
+    }: { title: string; id: number; dashboardId: number },
+    ref,
+  ) => {
+    const loaderRef = useRef();
+    const [isModalOpen1, setModalOpen1] = useState(false);
+    const [isModalOpen2, setModalOpen2] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [tempColumnName, setTempColumnName] = useState(title);
 
-  const { data: cards, fetchNextPage } = useCardListQuery({ columnId: id });
+    const { data: cards, fetchNextPage } = useCardListQuery({ columnId: id });
 
-  const isLastPage = cards?.pages?.at(-1)?.cursorId === null;
+    const isLastPage = cards?.pages?.at(-1)?.cursorId === null;
 
-  const cardCount = cards?.pages[0].totalCount || 0;
+    const cardCount = cards?.pages[0]?.totalCount || 0;
 
-  useIntersectionObserver(async () => {
-    await fetchNextPage();
-  }, loaderRef);
+    useIntersectionObserver(async () => {
+      await fetchNextPage();
+    }, loaderRef);
 
-  const openModal1 = () => setModalOpen1(true);
-  const openModal2 = () => setModalOpen2(true);
-  const closeModal1 = () => setModalOpen1(false);
-  const closeModal2 = () => setModalOpen2(false);
+    const openModal1 = () => setModalOpen1(true);
+    const openModal2 = () => setModalOpen2(true);
+    const closeModal1 = () => setModalOpen1(false);
+    const closeModal2 = () => setModalOpen2(false);
 
-  const toggleHeight = () => {
-    setIsExpanded(!isExpanded);
-  };
+    const toggleHeight = () => {
+      setIsExpanded(!isExpanded);
+    };
 
-  useIntersectionObserver(async () => {
-    await fetchNextPage();
-  }, loaderRef);
+    useIntersectionObserver(async () => {
+      await fetchNextPage();
+    }, loaderRef);
 
-  return (
-    <S.Column ref={ref} isExpanded={isExpanded} cardCount={cardCount}>
-      <S.ColumnTopFixedContent onClick={toggleHeight}>
-        <S.ColumnTitleContainer>
-          <S.ColumnTitleWrapper>
-            <S.ColumnTitleIconWrapper>
-              <S.ColumnTitleDotIcon />
-            </S.ColumnTitleIconWrapper>
-            <S.ColumnTitle>{title}</S.ColumnTitle>
-            <S.ColumnTaskNumber>{cardCount}</S.ColumnTaskNumber>
-          </S.ColumnTitleWrapper>
-          <S.SettingIcon onClick={openModal2} />
-        </S.ColumnTitleContainer>
-        <S.AddButtonTop onClick={openModal1} />
-      </S.ColumnTopFixedContent>
+    return (
+      <S.Column ref={ref} isExpanded={isExpanded} cardCount={cardCount}>
+        <S.ColumnTopFixedContent onClick={toggleHeight}>
+          <S.ColumnTitleContainer>
+            <S.ColumnTitleWrapper>
+              <S.ColumnTitleIconWrapper>
+                <S.ColumnTitleDotIcon />
+              </S.ColumnTitleIconWrapper>
+              <S.ColumnTitle>{title}</S.ColumnTitle>
+              <S.ColumnTaskNumber>{cardCount}</S.ColumnTaskNumber>
+            </S.ColumnTitleWrapper>
+            <S.SettingIcon onClick={openModal2} />
+          </S.ColumnTitleContainer>
+          <S.AddButtonTop onClick={openModal1} />
+        </S.ColumnTopFixedContent>
 
-      <ToDoCreateModal
-        dashboardId={dashboardId}
-        columnId={id}
-        isOpen={isModalOpen1}
-        onClose={closeModal1}
-      />
-      <ColumnsManageModal
-        isOpen={isModalOpen2}
-        onClose={closeModal2}
-        currentColumnName={tempColumnName}
-        columnsId={id}
-      />
-
-      <S.ColumnContentContainer>
-        <S.AddButtonContent onClick={openModal1} />
-        {cards?.pages.map((page) =>
-          page.cards.map((card) => (
-            <Card key={card.id} data={card} columnTitle={title} />
-          )),
-        )}
-        <CardLoader
-          loaderRef={loaderRef}
-          style={
-            cardCount === 0 || isLastPage
-              ? { display: 'none' }
-              : { marginTop: '2rem' }
-          }
+        <ToDoCreateModal
+          dashboardId={dashboardId}
+          columnId={id}
+          isOpen={isModalOpen1}
+          onClose={closeModal1}
         />
-      </S.ColumnContentContainer>
-    </S.Column>
-  );
-});
+        <ColumnsManageModal
+          isOpen={isModalOpen2}
+          onClose={closeModal2}
+          currentColumnName={tempColumnName}
+          columnsId={id}
+        />
+
+        <S.ColumnContentContainer>
+          <S.AddButtonContent onClick={openModal1} />
+          {cards?.pages.map((page) =>
+            page.cards.map((card) => (
+              <Card key={card.id} data={card} columnTitle={title} />
+            )),
+          )}
+          <CardLoader
+            loaderRef={loaderRef}
+            style={
+              cardCount === 0 || isLastPage
+                ? { display: 'none' }
+                : { marginTop: '2rem' }
+            }
+          />
+        </S.ColumnContentContainer>
+      </S.Column>
+    );
+  },
+);
 
 export default Column;
