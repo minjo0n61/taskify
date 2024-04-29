@@ -10,6 +10,11 @@ import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import MEDIA_QUERIES from '@/constants/MEDIAQUERIES';
 import SettingIcon from '@/public/icon/settingIcon.svg';
 
+interface ColumnProps {
+  isExpanded: boolean;
+  cardCount: number;
+}
+
 const S = {
   DashBoardWrapper: styled.div`
     display: flex;
